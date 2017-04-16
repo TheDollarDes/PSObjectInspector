@@ -1,17 +1,9 @@
-﻿# Powershell Object Inspector module
-
-Combines tools from:
-
- * Raimund Andrée
- * Jrich523
- * RamblingCookieMonster
- * Lee Holmes
- 
-##Description
-A Compilation of Powershell Modules for runtime Object Inspection
-
-##
-
+function Out-Default {
+	
+	<#
+    .SYNOPSIS
+        Spelunking with Show-Object
+    .DESCRIPTION
 Spelunk [spi-luhngk], verb. To explore caves, especially as a hobby.
 
 We must first recall that PowerShell pipelines are very different from, say, Linux pipelines. Rather than consisting of text, PowerShell objects are "three-dimensional" data structures that consist of properties (descriptive attributes), methods (actions the object can undertake), and events (actions that can be undertaken on the object). Collectively, these data elements are called object members.
@@ -54,6 +46,8 @@ As it happens, Show-Object is only one function among many that are contained in
 
 Get-Command -Module PowerShellCookbook
 
+
+
 Using the Show-Object Function
 
 To use Show-Object, simply pipe your desired PowerShell object into the function like so:
@@ -61,6 +55,8 @@ To use Show-Object, simply pipe your desired PowerShell object into the function
 Get-Service -Name Spooler | Show-Object
 
 Take a look at the following Show-Object output, and I'll walk you through it.
+
+
 
 The bottom pane (sadly unresizable) shows your ordinary Get-Member output. The upper pane allows you to quickly parse the object properties. For instance, we can expand each RequiredServices node to learn that the Print Spooler service in Windows 8.1 depends on a Remote Procedure Call (RPC) and HTTP services.
 
@@ -73,7 +69,82 @@ One of the many things I love about the Windows PowerShell community is how frie
 
 That's all there is to it! 
 
-##Other Information
-**Author: Compilation by Des van Heerden** {{ModulesAuthor}}
+    .FUNCTIONALITY
+        General Command
+    #>
+    [CmdletBinding()]    
+    param(
+        
+    [Parameter(ValueFromPipeline=$true)]
+    [psobject]
+    $InputObject
+    )
+    
+    begin {
+        $global:lastOutputCollection = New-Object Collections.ArrayList
+        try {
+             $outBuffer = $null
+             if ($PSBoundParameters.TryGetValue('OutBuffer', [ref]$outBuffer))
+             {
+                 $PSBoundParameters['OutBuffer'] = 1
+             }
+             $wrappedCmd = $ExecutionContext.InvokeCommand.GetCommand('Out-Default', [System.Management.Automation.CommandTypes]::Cmdlet)
+             $scriptCmd = {& $wrappedCmd @PSBoundParameters }
+             $steppablePipeline = $scriptCmd.GetSteppablePipeline($myInvocation.CommandOrigin)
+             $steppablePipeline.Begin($true)
+         } catch {
+             throw
+         }
+         $invocation = Get-PSCallStack
+    }
+    
+    process {
+        try {
+            $willProcess = $true 
+            if ($_ -is [Management.Automation.ErrorRecord]) {
+                $e = $_ 
+                $i = $invocation
 
-**Website:** 
+<#
+                $cs = Get-PSCallStack
+                $lastAction = Get-History -Count 1 
+                if ($lastAction.CommandLine -like "*http*") {
+                    if ($lastAction.CommandLine -like "`$*=*http*") {
+                        $maybeUrl = $lastAction.CommandLine.Substring($lastAction.CommandLine.IndexOf("=") + 1).Trim()
+                        $variableName = $lastAction.CommandLine.Substring(0, $lastAction.CommandLine.IndexOf("=") - 1).TrimStart('$')
+                        if ($maybeUrl -like "http*") {
+                            Set-Variable -Name $variableName -Value (
+                                Get-Web -UseWebRequest $maybeUrl
+                            ) -Option AllScope
+                        }
+                    } else {
+                        Start-Process -FilePath $lastAction.CommandLine
+                    }
+                }
+                $null = $null
+                #>
+             }
+             $steppablePipeline.Process($_)
+             $null = $global:lastOutputCollection.Add($_)
+             $global:lastOutputItem = $_
+        } catch {
+             throw
+        }
+                     
+
+    }
+    
+    end {
+        if ($global:lastOutputCollection.Count) {
+        $global:LastOutput = $global:lastOutputCollection        
+        }
+        
+        try {
+             $steppablePipeline.End()
+        } catch {
+             throw
+        }
+
+    }
+}
+

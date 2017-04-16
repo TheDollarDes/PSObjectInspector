@@ -1,0 +1,17 @@
+﻿TOPIC
+    about_PSObjectInspector
+
+SHORT DESCRIPTION
+    A Compilation of Powershell Modules for Object Inspection
+
+LONG DESCRIPTION
+    A Compilation of Powershell Modules for Object Inspection
+
+EXAMPLES
+    TBD
+
+KEYWORDS
+    PowerShell,Debugging,Monitoring_Variables,Monitoring_Objects
+
+SEE ALSO
+    https://github.com/TheDollarDes/PSObjectInspector

@@ -25,12 +25,12 @@ $ModuleDescription = 'A Compilation of Powershell Modules for Object Inspection'
 # Options - These affect how your eventual build will be run.
 $OptionFormatCode = $false
 $OptionAnalyzeCode = $true
-$OptionCombineFiles = $true
+$OptionCombineFiles = $false
 $OptionTranscriptEnabled = $false
 $OptionTranscriptLogFile = 'BuildTranscript.Log'
 
 # PlatyPS has been the cause of most of my build failures. This can help you isolate which functrion's CBH is causing you grief.
-$OptionRunPlatyPSVerbose = $false
+$OptionRunPlatyPSVerbose = $true
 
 # Additional paths in the source module which should be copied over to the final build release
 # Example: @('.\Objs','.\Scripts')

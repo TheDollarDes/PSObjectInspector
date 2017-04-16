@@ -670,8 +670,8 @@ task . `
         PrepareStage, 
         GetPublicFunctions,
         FormatCode,
-        CreateHelp,
-        CreateModulePSM1, 
+        #CreateHelp,
+        #CreateModulePSM1, 
         PushVersionRelease, 
         PushCurrentRelease, 
         BuildSessionCleanup
