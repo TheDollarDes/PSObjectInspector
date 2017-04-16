@@ -27,7 +27,7 @@ CompanyName = 'Compilation by Des van Heerden'
 Copyright = '(c) 2016 Compilation by Des van Heerden. All rights reserved.'
 
 # Description of the functionality provided by this module
-Description = 'A Compilation of Powershell Modules for Object Inspection'
+Description = 'A Compilation of Powershell Modules for runtime Object Inspection'
 
 # Minimum version of the Windows PowerShell engine required by this module
 PowerShellVersion = '3.0'
